@@ -1,3 +1,7 @@
+/.idea
+/coverage
+/tmp
+*.iml
 jwt.gemspec
 pkg
 Gemfile.lock
