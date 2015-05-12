@@ -48,7 +48,7 @@ module JWT
   def sign_ecdsa(algorithm, msg, private_key)
     key_algorithm = NAMED_CURVES[private_key.group.curve_name]
     if algorithm != key_algorithm
-      raise IncorrectAlgorithm.new("payload algorithm is #{algorithm} but #{key_algorithm} signing key was provided")
+      raise IncorrectAlgorithm.new("payload algorithm is #{algorithm} but #{private_key.group.curve_name} signing key was provided")
     end
 
     digest = OpenSSL::Digest.new(algorithm.sub('ES', 'sha'))
@@ -111,7 +111,7 @@ module JWT
 
   def raw_segments(jwt, verify=true)
     segments = jwt.split('.')
-    required_num_segments = verify ? [3] : [2,3]
+    required_num_segments = [2,3]
     raise JWT::DecodeError.new('Not enough or too many segments') unless required_num_segments.include? segments.length
     segments
   end
@@ -202,6 +202,8 @@ module JWT
         raise JWT::VerificationError.new('Signature verification failed') unless verify_rsa(algo, key, signing_input, signature)
       elsif ['ES256', 'ES384', 'ES512'].include?(algo)
         raise JWT::VerificationError.new('Signature verification failed') unless verify_ecdsa(algo, key, signing_input, signature)
+      elsif ['none'].include?(algo)
+        true
       else
         raise JWT::VerificationError.new('Algorithm not supported')
       end
