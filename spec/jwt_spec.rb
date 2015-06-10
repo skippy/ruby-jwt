@@ -439,7 +439,7 @@ describe JWT do
       end
     end
 
-    context 'jwt id claim', :focus do
+    context 'jwt id claim' do
       let :jti do
         new_payload = payload.merge({
           'iat' => Time.now.to_i
