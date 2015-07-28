@@ -4,7 +4,7 @@ require 'jwt'
 describe JWT do
   let :payload do
     {
-      user_id: 'some@user.tld'
+      :user_id => 'some@user.tld'
     }
   end
 
@@ -187,11 +187,11 @@ describe JWT do
         token = JWT.encode payload, data[:secret], 'HS512'
 
         expect do
-          JWT.decode token, data[:secret], true, { algorithm: 'HS384' }
+          JWT.decode token, data[:secret], true, { :algorithm => 'HS384' }
         end.to raise_error JWT::IncorrectAlgorithm
 
         expect do
-          JWT.decode token, data[:secret], true, { algorithm: 'HS512' }
+          JWT.decode token, data[:secret], true, { :algorithm => 'HS512' }
         end.not_to raise_error
       end
     end
